@@ -175,11 +175,14 @@ Statement* parseStatement(TokenScanner &scanner, const std::string &type) {
         Expression *lhs = readE(scanner, 0);
         std::string op = scanner.nextToken();
         if (op != "=" && op != "<" && op != ">") {
+            delete lhs;
             error("SYNTAX ERROR");
         }
         Expression *rhs = readE(scanner, 0);
         std::string then = scanner.nextToken();
         if (then != "THEN") {
+            delete lhs;
+            delete rhs;
             error("SYNTAX ERROR");
         }
         std::string lineStr = scanner.nextToken();
