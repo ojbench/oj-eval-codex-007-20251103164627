@@ -85,4 +85,6 @@ public:
  * specify its own destructor method to free that memory.
  */
 
+Statement* parseStatement(TokenScanner &scanner, const std::string &type);
+
 #endif
