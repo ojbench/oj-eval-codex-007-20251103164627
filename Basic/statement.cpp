@@ -172,12 +172,12 @@ Statement* parseStatement(TokenScanner &scanner, const std::string &type) {
         int lineNumber = stringToInteger(lineStr);
         return new GotoStmt(lineNumber);
     } else if (type == "IF") {
-        Expression *lhs = parseExp(scanner);
+        Expression *lhs = readE(scanner, 0);
         std::string op = scanner.nextToken();
         if (op != "=" && op != "<" && op != ">") {
             error("SYNTAX ERROR");
         }
-        Expression *rhs = parseExp(scanner);
+        Expression *rhs = readE(scanner, 0);
         std::string then = scanner.nextToken();
         if (then != "THEN") {
             error("SYNTAX ERROR");
