@@ -91,8 +91,13 @@ void processLine(std::string line, Program &program, EvalState &state) {
             stmtScanner.setInput(remaining);
             stmtScanner.nextToken(); // consume statement type
             
-            Statement *stmt = parseStatement(stmtScanner, stmtType);
-            program.setParsedStatement(lineNumber, stmt);
+            try {
+                Statement *stmt = parseStatement(stmtScanner, stmtType);
+                program.setParsedStatement(lineNumber, stmt);
+            } catch (ErrorException &ex) {
+                program.removeSourceLine(lineNumber);
+                throw ex;
+            }
         } else {
             error("SYNTAX ERROR");
         }
@@ -143,8 +148,13 @@ void processLine(std::string line, Program &program, EvalState &state) {
         stmtScanner.nextToken(); // consume statement type
         
         Statement *stmt = parseStatement(stmtScanner, token);
-        stmt->execute(state, program);
-        delete stmt;
+        try {
+            stmt->execute(state, program);
+            delete stmt;
+        } catch (ErrorException &ex) {
+            delete stmt;
+            throw ex;
+        }
     } else {
         error("SYNTAX ERROR");
     }
